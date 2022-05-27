@@ -1,6 +1,5 @@
 # Here I will begin to outline various methods that are required in the execution of the logic of this program. I will begin with basic intuitive methods and then use these as puzzle pieces to bring the advanced logic together.
-POSSIBLEWORDS = []
-BANNEDLETTERS = []
+
 WORDLIST = []
 wordfile = open('GUESSWORDS.txt')
 readguesses = wordfile.read()
@@ -49,31 +48,40 @@ def compareWords(guess, answer):
 
 #REMOVES ALL WORDS THAT ARE NO LONGER POSSIBLE
 
-def cleanList(guess, score):
-    for i in range(len(ANSWERLIST)):
-        for j in range(5):
+def cleanList(guess, score, remainingWords):
+    
+    newList = []
+    
+    for i in range(len(remainingWords)):
+        temp = True
+        for j in range(len(score)):
             if score[j] == 0:
-                for k in range(5):
-                    print(ANSWERLIST[i][k])
-                    
-                    if guess[j] == ANSWERLIST[i][k]:
-                        del ANSWERLIST[i]
-                        break
-            elif score[j] == 1:
-                temp = False
-                for k in range(5):
-                    if (guess[j] == ANSWERLIST[i][k]) and (j != k):
-                        temp = True
-                        break
-                if temp == False:
-                    del ANSWERLIST[i]
+                for k in range(len(remainingWords[i])):
+                    if guess[j] == remainingWords[i][k]:
+                        temp = False
+            
             elif score[j] == 2:
-                temp = False
-                for k in range(5):
-                    if (guess[j] == ANSWERLIST[i][k]) and (j == k):
+                if not guess[j] == remainingWords[i][j]:
+                    temp = False
+                        
+            elif score[j] == 1:
+                for l in range(len(remainingWords[i])):
+                    if  not (guess[j] == remainingWords[i][l] and j != l):
+                        temp = False
+                    elif remainingWords[i][l] == guess[l]:
+                        temp = False
+                    else:
                         temp = True
                         break
-                if temp == False:
-                    del ANSWERLIST[i]
-            else:
-                print("ERROR")
+
+            
+        if temp:
+            newList.append(remainingWords[i])
+    return newList
+    
+    
+#RETURNS THE NUMBER OF WORDS ELIMINATED AFTER A CERTAIN GUESS USING THE ABOVE METHODS
+
+def numberEliminated(guess, keyword):
+    score = compareWords(guess, keyword)
+    return(len(ANSWERLIST) - len(cleanList(guess, score, ANSWERLIST)))
