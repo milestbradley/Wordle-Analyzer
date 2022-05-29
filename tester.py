@@ -1,3 +1,3 @@
 from methods import*
 
-print(numberEliminated("boobs", "rabbi"))
+print(averageEliminated("hhhhh", ANSWERLIST))

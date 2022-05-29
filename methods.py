@@ -34,7 +34,7 @@ def compareWords(guess, answer):
                 if i == j:
                     score.insert(i, 2)
                     isScored = True
-                    
+
                 else:
                     if isScored == False:
                         score.insert(i, 1)
@@ -44,44 +44,54 @@ def compareWords(guess, answer):
     while len(score)>5:
         score.pop(5)
     return score
-    
+
 
 #REMOVES ALL WORDS THAT ARE NO LONGER POSSIBLE
 
 def cleanList(guess, score, remainingWords):
-    
+
     newList = []
-    
+
     for i in range(len(remainingWords)):
-        temp = True
+        keep_word = True
         for j in range(len(score)):
             if score[j] == 0:
                 for k in range(len(remainingWords[i])):
                     if guess[j] == remainingWords[i][k]:
-                        temp = False
-            
+                        keep_word = False
+
             elif score[j] == 2:
                 if not guess[j] == remainingWords[i][j]:
-                    temp = False
-                        
+                    keep_word = False
+
             elif score[j] == 1:
                 for l in range(len(remainingWords[i])):
                     if  not (guess[j] == remainingWords[i][l] and j != l):
-                        temp = False
+                        keep_word = False
                     elif remainingWords[i][l] == guess[l]:
-                        temp = False
+                        keep_word = False
                     else:
-                        temp = True
+                        keep_word = True
                         break
 
-            
-        if temp:
+
+        if keep_word:
             newList.append(remainingWords[i])
     return newList
-    
-    
+
+
 #RETURNS THE NUMBER OF WORDS ELIMINATED AFTER A CERTAIN GUESS USING THE ABOVE METHODS
 
 def numberEliminated(guess, keyword):
     score = compareWords(guess, keyword)
     return(len(ANSWERLIST) - len(cleanList(guess, score, ANSWERLIST)))
+    
+    
+#RETURNS THE AVERAGE NUMBER OF WORDS ELIMINATED FOR A SINGLE GUESS ACROSS EVERY POSSIBLE ANSWER
+
+def averageEliminated(guess, remainingWords):
+    num_elim = 0
+    for i in range(len(remainingWords)):
+        num_elim += numberEliminated(guess, remainingWords[i])
+        
+    return num_elim/len(remainingWords)
