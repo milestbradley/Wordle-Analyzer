@@ -1,3 +1,7 @@
 from methods import*
 
-print(averageEliminated("hhhhh", ANSWERLIST))
+initial_barray = stringListToByteArray(ANSWERLIST)
+
+c = cleanByteArray("hhhhh", [0, 0, 0, 0, 0], initial_barray)
+
+print(len(c))
