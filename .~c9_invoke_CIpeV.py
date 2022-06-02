@@ -14,7 +14,6 @@ ANSWERLIST = readanswers.replace('\n', ' ').split()
 wordfile.close()
 
 
-
 #CHECKS IF GUESSWORD IS A VALID GUESS
 
 def guessInList(word):
@@ -23,20 +22,6 @@ def guessInList(word):
             return True
             break
 
-def stringListToByteArray(remainingWords):
-    
-    remainingByteArray = bytearray()
-    for i in range(len(remainingWords)):
-        
-        remainingByteArray.extend(map(ord, remainingWords[i]))
-    return remainingByteArray
-
-def byteArrayToStringList(remainingWords):
-    newList = []
-    for i in range(len(remainingWords)):
-        newList.append(chr(remainingWords[i]))
-        
-    return newList
 
 #COMPARES TWO WORDS
 
@@ -57,21 +42,18 @@ def compareWords(guess, answer):
         if isScored == False:
             score[i] = 0
     return score
-    
-def guessToByteArray(guess):
+
+
+#REMOVES ALL WORDS THAT ARE NO LONGER POSSIBLE
+def cleanByteArray(guess, score, remainingByteArray):
     guess_array = bytearray()
     for i in range(5):
         guess_array.extend(map(ord, guess))
-    return guess_array
-
-initial_barray = stringListToByteArray(ANSWERLIST)
-
-#REMOVES ALL WORDS THAT ARE NO LONGER POSSIBLE
-def cleanByteArray(guess_array, score, remainingByteArray):
-
+        
     newByteArray = bytearray()
     score_len = len(score)
     remaining_count = len(remainingByteArray)
+    i = 0
     for i in range(0, remaining_count, 5):
         keep_word = True
         for j in range(score_len):
@@ -149,8 +131,7 @@ def cleanList(guess, score, remainingWords):
 
 def numberEliminated(guess, keyword):
     score = compareWords(guess, keyword)
-
-    return(len(ANSWERLIST) - len(cleanByteArray(guessToByteArray(guess), score, initial_barray))/5)
+    return(len(ANSWERLIST) - len(cleanList(guess, score, ANSWERLIST)))
     
     
 #RETURNS THE AVERAGE NUMBER OF WORDS ELIMINATED FOR A SINGLE GUESS ACROSS EVERY POSSIBLE ANSWER
@@ -162,3 +143,17 @@ def averageEliminated(guess, remainingWords):
         
     return num_elim/len(remainingWords)
     
+def stringListToByteArray(remainingWords):
+    
+    remainingByteArray = bytearray()
+    for i in range(len(remainingWords)):
+        
+        remainingByteArray.extend(map(ord, remainingWords[i]))
+    return remainingByteArray
+
+def byteArrayToStringList(remainingWords):
+    newList = []
+    for i in range(len(remainingWords)):
+        newList.append(chr(remainingWords[i]))
+        
+    return newList
