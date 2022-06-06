@@ -40,12 +40,12 @@ def byteArrayToStringList(remainingWords):
 
 #COMPARES TWO WORDS
 
-def compareWords(guess, answer):
+def compareWords(guess_array, answer_array):
     score = [0, 0, 0, 0, 0]
     for i in range(5):
         isScored = False
         for j in range(5):
-            if guess[i] == answer[j]:
+            if guess_array[i] == answer_array[j]:
                 if i == j:
                     score[i] = 2
                     isScored = True
@@ -147,18 +147,21 @@ def cleanList(guess, score, remainingWords):
 
 #RETURNS THE NUMBER OF WORDS ELIMINATED AFTER A CERTAIN GUESS USING THE ABOVE METHODS
 
-def numberEliminated(guess, keyword):
-    score = compareWords(guess, keyword)
+def numberEliminated(guess_array, keyword_array):
+    score = compareWords(guess_array, keyword_array)
 
-    return(len(ANSWERLIST) - len(cleanByteArray(guessToByteArray(guess), score, initial_barray))/5)
+    return(len(ANSWERLIST) - len(cleanByteArray(guess_array, score, initial_barray))/5)
     
     
 #RETURNS THE AVERAGE NUMBER OF WORDS ELIMINATED FOR A SINGLE GUESS ACROSS EVERY POSSIBLE ANSWER
 
-def averageEliminated(guess, remainingWords):
+def averageEliminated(guess_array, remainingByteArray):
     num_elim = 0
-    for i in range(len(remainingWords)):
-        num_elim += numberEliminated(guess, remainingWords[i])
+    for i in range(0, len(remainingByteArray), 5):
+        keyword_array = bytearray()
+        for j in range(5):
+            keyword_array.append(remainingByteArray[i+j])
+        num_elim += numberEliminated(guess_array, keyword_array)
         
-    return num_elim/len(remainingWords)
+    return num_elim/(len(remainingByteArray)/5)
     
