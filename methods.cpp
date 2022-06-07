@@ -49,14 +49,13 @@ void compareWords(char guess_arr[], char answer_arr[], int score[])
     }
 }
 // May need another argument here, a preexisting array of ___ size, which depends on the algorithm of this method.
-void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[])
+void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[], int remaining_count)
 {
 
-
-    int remaining_count = sizeof(remainingChArray);
     int z = 0;
     for(int i = 0; i < remaining_count; i+=5)
     {
+//        printf("%c, %i\n", remainingChArray[i], i);
         bool keep_word = true;
         for(int j = 0; j < 5; j++)
         {
@@ -135,36 +134,28 @@ int main()
         count++;
     }
     numberOfWords = count;
-    char chAnswerList[11545];
-    for(int i = 0; i < numberOfWords; i++)
+    int ch_count = 11545;
+    char chAnswerList[ch_count];
+    for(int i = 0; i < ch_count; i += 5)
     {
         for(int j = 0; j < 5; j++)
         {
-            printf("%c ", ANSWERLIST[i][j]);
-            chAnswerList[i] = ANSWERLIST[i][j];
+            chAnswerList[i+j] = ANSWERLIST[i][j];
+            printf("%c ", chAnswerList[i+j]);
         }
         printf("\n");
     }
 
     int score_template[5] = {0, 0, 0, 0, 0};
     
-    guessInList("pasta", ANSWERLIST, numberOfWords);
-    
     char guess_arr[5] = {'s', 'c', 'o', 'p', 'e'};
     
     char answer_arr[5] = {'s', 'c', 'o', 'r', 'n'};
-    
-    for(int i = 0; i < 5; i++)
-    {
-        printf("%i ", score_template[i]);
-    }
-    printf("\n");
-    
-    cleanChArray(guess_arr, score_template, chAnswerList, chArray);
 
-    for(int i = 0; i < 11545; i++)
+    cleanChArray(guess_arr, score_template, chAnswerList, chArray, ch_count);
+    for(int i = 0; i<ch_count; i++)
     {
-        printf("%c", chArray[i]);
+        printf("%c ", chArray[i]);
     }
     return 0;
 }
