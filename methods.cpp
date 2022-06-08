@@ -49,7 +49,7 @@ void compareWords(char guess_arr[], char answer_arr[], int score[])
     }
 }
 
-void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[], int remaining_count, int added_counter)
+void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[], int remaining_count, int& added_counter)
 {
 
     added_counter = 0;
@@ -136,7 +136,7 @@ int main()
     }
     numberOfWords = count;
     int ch_count = 11545;
-    char chAnswerList[ch_count];
+    char * chAnswerList = new char[ch_count];
     for(int i = 0; i < 2309; i++)
     {
         for(int j = 0; j < 5; j++)
