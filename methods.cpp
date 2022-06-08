@@ -49,9 +49,8 @@ void compareWords(char guess_arr[], char answer_arr[], int score[])
     }
 }
 
-void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[], int remaining_count, int added_counter)
+void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[], int remaining_count, int& added_counter)
 {
-
     added_counter = 0;
     for(int i = 0; i < remaining_count; i+=5)
     {
@@ -104,12 +103,36 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
         {
             for(int k = i; k < i+5; k++)
             {
+//                printf("here\n");
                 newChArray[added_counter] = remainingChArray[k];
                 added_counter++;
             }
         }
     }
-    printf("%d\n", added_counter);
+
+}
+
+int numberEliminated(char guess_arr[], char keyword_arr[], int score[], char remainingChArray[], char newChArray[], int remainingCount, int& added_counter)
+{
+    compareWords(guess_arr, keyword_arr, score);
+    cleanChArray(guess_arr, score, remainingChArray, newChArray, remainingCount, added_counter);
+    return(2309 - (added_counter)/5);
+}
+
+int averageEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
+{
+    int num_elim = 0;
+    int current_length = added_counter;
+    for(int i = 0; i < remainingCount; i += 5)
+    {
+        char * keyword_array = new char[5];
+        for(int j = 0; j < 5; j++)
+        {
+            keyword_array[j] = remainingChArray[i+j];
+        }
+        num_elim += numberEliminated(guess_arr, keyword_array, score, remainingChArray, newChArray, remainingCount, added_counter);
+    }
+    return num_elim/2309;
 }
 
 int main()
@@ -136,7 +159,7 @@ int main()
     }
     numberOfWords = count;
     int ch_count = 11545;
-    char chAnswerList[ch_count];
+    char * chAnswerList = new char[ch_count];
     for(int i = 0; i < 2309; i++)
     {
         for(int j = 0; j < 5; j++)
@@ -144,21 +167,11 @@ int main()
             chAnswerList[(5*i)+j] = ANSWERLIST[i][j];
         }
     }
-    char guess[] = {'s', 'c', 'o', 'p', 'e'};
-    char answer[] = {'s', 'c', 'o', 'p', 'e'};
-    
-    compareWords(guess, answer, score_template);
-    
-    cleanChArray(guess, score_template, chAnswerList, chArray, ch_count, addCount);
-    
-
-    for(int i = 0; i < addCount; i++)
-    {
-        printf("%c", chArray[i]);
-        printf("\n");
-    }
-    
-    return 0;
+    char guess[] = {'a', 'd', 'e', 'i', 'u'};
+    char answer[] = {'p', 'r', 'a', 'w', 'n'};
+    int num = numberEliminated(guess, answer, score_template, chAnswerList, chArray, ch_count, addCount);
+    int avg_num = averageEliminated(guess, chAnswerList, score_template, chArray, ch_count, addCount);
+    printf("%i\n", num);
 }
 
 
