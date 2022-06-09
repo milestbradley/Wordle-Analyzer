@@ -1,7 +1,22 @@
 #include <iostream>
 #include <fstream>
+#include <map>
+#include <string>
+#include <bits/stdc++.h>
 
 using namespace std;
+
+struct Guessdata{
+        char guess[5];
+        int average;
+    };
+    
+    
+struct {
+        bool operator()(const Guessdata& a, const Guessdata& b) const { return a.average < b.average; }
+    } customLess;
+    
+
 
 bool guessInList(string guess, string arr[], int num_words)
 {   
@@ -65,8 +80,19 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
                 {
                     if(guess_ch == remainingChArray[i+k])
                     {
-                        keep_word = false;
-                        break;
+                        for(int e = 0; e < 5; e++)
+                        {
+                            if(guess_array[e] == remainingChArray[i+k] && e != k && score[e] != 0)
+                            {
+                                keep_word = true;
+                                break;
+                            }
+                            else
+                            {
+                                keep_word = false;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -80,19 +106,21 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
             }
             else if(score_j == 1)
             {
+                int found = 0;
                 for(int l = 0; l < 5; l++)
                 {
-                    if(!(guess_ch == remainingChArray[i+l] && j!=l))
+                    if(guess_ch == remainingChArray[i+l] && j == l)
                     {
-                        keep_word = false;
+                        keep_word == false;
                         break;
                     }
-                    else if(guess_ch == remainingChArray[i+l])
+                    else if(guess_ch == remainingChArray[i+l] && j!=l)
                     {
-                        keep_word = false;
-                        break;
+                        found += 1;
+
                     }
                 }
+                keep_word = (found == 1);
             }
             if(!keep_word)
             {
@@ -135,6 +163,32 @@ int averageEliminated(char guess_arr[], char remainingChArray[], int score[], ch
     return num_elim/2309;
 }
 
+void rankGuess(char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
+{
+    int num_words = 2309;
+    Guessdata guess_dict[num_words];
+    for(int i = 0; i < added_counter; i += 5)
+    {
+        char guess_arr[5];
+        for(int j = 0; j < 5; j++)
+        {
+            guess_arr[j] = remainingChArray[i+j];
+        }
+        memcpy(&guess_dict[i/5], &guess_arr, sizeof(char)*5);
+        guess_dict[i/5].average = averageEliminated(guess_arr, remainingChArray, score, newChArray, remainingCount, added_counter);
+    }
+    std::sort(&guess_dict[0], &guess_dict[num_words], customLess);
+    for(int i = 0; i < num_words; i++)
+    {
+        for(int j = 0; j < 5; j++)
+        {
+            printf("%c", guess_dict[i].guess[j]);
+        }
+        printf("\n");
+    }
+    
+}
+
 int main()
 {
     const int num_words = 2309;
@@ -167,11 +221,12 @@ int main()
             chAnswerList[(5*i)+j] = ANSWERLIST[i][j];
         }
     }
-    char guess[] = {'a', 'd', 'e', 'i', 'u'};
-    char answer[] = {'p', 'r', 'a', 'w', 'n'};
+    char guess[] = {'z', 'm', 'm', 'm', 'm'};
+    char answer[] = {'z', 'q', 'q', 'q', 'q'};
     int num = numberEliminated(guess, answer, score_template, chAnswerList, chArray, ch_count, addCount);
-    int avg_num = averageEliminated(guess, chAnswerList, score_template, chArray, ch_count, addCount);
+ //   int avg_num = averageEliminated(guess, chAnswerList, score_template, chArray, ch_count, addCount);
     printf("%i\n", num);
+    rankGuess(chAnswerList, score_template, chArray, ch_count, addCount);
 }
 
 
