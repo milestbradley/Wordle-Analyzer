@@ -15,16 +15,16 @@ struct Guessdata{
         char guess[5];
         int average;
     };
-    
-    
+
+
 struct {
         bool operator()(const Guessdata& a, const Guessdata& b) const { return a.average < b.average; }
     } customLess;
-    
+
 
 
 bool guessInList(string guess, string arr[], int num_words)
-{   
+{
     int i;
     for(i = 0; i < num_words; i++)
     {
@@ -45,7 +45,7 @@ void compareWords(char guess_arr[], char answer_arr[], int score[])
         bool isScored = false;
 
         for(int j = 0; j <5; j++)
-        
+
             if(guess_arr[i] == answer_arr[j])
             {
                 if(i == j)
@@ -116,7 +116,7 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
                 {
                     if(guess_ch == remainingChArray[i+l] && j == l)
                     {
-                        keep_word = false;
+                        keep_word == false;
                         break;
                     }
                     else if(guess_ch == remainingChArray[i+l] && j!=l)
@@ -152,10 +152,10 @@ int numberEliminated(char guess_arr[], char keyword_arr[], int score[], char rem
     return(2309 - (added_counter)/5);
 }
 
-int averageEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount)
+int averageEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
 {
     int num_elim = 0;
-    int added_counter;
+    int current_length = added_counter;
     for(int i = 0; i < remainingCount; i += 5)
     {
         char * keyword_array = new char[5];
@@ -165,34 +165,26 @@ int averageEliminated(char guess_arr[], char remainingChArray[], int score[], ch
         }
         num_elim += numberEliminated(guess_arr, keyword_array, score, remainingChArray, newChArray, remainingCount, added_counter);
     }
-    //return float(num_elim) / 2309.0;
     return num_elim/2309;
 }
 
 void rankGuess(char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
 {
     int num_words = 2309;
-    Guessdata * guess_dict = new Guessdata[num_words];
-    for(int i = 0; i < added_counter; i += 5)
+    Guessdata guess_dict[num_words];
+    for(int i = 0; i < 11545; i += 5)
     {
         char guess_arr[5];
         for(int j = 0; j < 5; j++)
         {
-            guess_arr[j] = remainingChArray[i+j];
+            guess_dict[i/5].guess[j] = remainingChArray[i+j];
         }
-        memcpy(&guess_dict[i/5], &guess_arr, sizeof(char)*5);
-        guess_dict[i/5].average = averageEliminated(guess_arr, remainingChArray, score, newChArray, remainingCount);
+        guess_dict[i/5].average = averageEliminated(guess_arr, remainingChArray, score, newChArray, remainingCount, added_counter);
+        printf("%i  ", guess_dict[i/5].average);
     }
+    printf("\n");
     std::sort(&guess_dict[0], &guess_dict[num_words], customLess);
-    for(int i = 0; i < num_words; i++)
-    {
-        for(int j = 0; j < 5; j++)
-        {
-            printf("%c", guess_dict[i].guess[j]);
-        }
-        printf("\n");
-    }
-    
+
 }
 
 int main()
