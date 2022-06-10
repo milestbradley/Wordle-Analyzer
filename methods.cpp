@@ -146,10 +146,10 @@ int numberEliminated(char guess_arr[], char keyword_arr[], int score[], char rem
     return(2309 - (added_counter)/5);
 }
 
-int averageEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
+int averageEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount)
 {
     int num_elim = 0;
-    int current_length = added_counter;
+    int added_counter;
     for(int i = 0; i < remainingCount; i += 5)
     {
         char * keyword_array = new char[5];
@@ -174,7 +174,7 @@ void rankGuess(char remainingChArray[], int score[], char newChArray[], int rema
             guess_arr[j] = remainingChArray[i+j];
         }
         memcpy(&guess_dict[i/5], &guess_arr, sizeof(char)*5);
-        guess_dict[i/5].average = averageEliminated(guess_arr, remainingChArray, score, newChArray, remainingCount, added_counter);
+        guess_dict[i/5].average = averageEliminated(guess_arr, remainingChArray, score, newChArray, remainingCount);
     }
     std::sort(&guess_dict[0], &guess_dict[num_words], customLess);
     for(int i = 0; i < num_words; i++)
