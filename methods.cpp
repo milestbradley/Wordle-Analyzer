@@ -8,6 +8,8 @@ using namespace std;
 const bool __debug = false;
 #define dout    if (__debug) std::cout
 #define dprintf if (__debug) printf
+// dout << "this is debug stuff\n";
+// dprintf("the value of x is %d\n", x );
 
 struct Guessdata{
         char guess[5];
