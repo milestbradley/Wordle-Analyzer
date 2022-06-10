@@ -159,6 +159,7 @@ int averageEliminated(char guess_arr[], char remainingChArray[], int score[], ch
         }
         num_elim += numberEliminated(guess_arr, keyword_array, score, remainingChArray, newChArray, remainingCount, added_counter);
     }
+    //return float(num_elim) / 2309.0;
     return num_elim/2309;
 }
 
