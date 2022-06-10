@@ -5,6 +5,10 @@
 
 using namespace std;
 
+const bool __debug = false;
+#define dout    if (__debug) std::cout
+#define dprintf if (__debug) printf
+
 struct Guessdata{
         char guess[5];
         int average;
