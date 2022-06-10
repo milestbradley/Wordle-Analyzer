@@ -2,7 +2,6 @@
 #include <fstream>
 #include <map>
 #include <string>
-#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -111,7 +110,7 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
                 {
                     if(guess_ch == remainingChArray[i+l] && j == l)
                     {
-                        keep_word == false;
+                        keep_word = false;
                         break;
                     }
                     else if(guess_ch == remainingChArray[i+l] && j!=l)
@@ -166,7 +165,7 @@ int averageEliminated(char guess_arr[], char remainingChArray[], int score[], ch
 void rankGuess(char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
 {
     int num_words = 2309;
-    Guessdata guess_dict[num_words];
+    Guessdata * guess_dict = new Guessdata[num_words];
     for(int i = 0; i < added_counter; i += 5)
     {
         char guess_arr[5];
