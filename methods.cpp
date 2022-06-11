@@ -105,7 +105,6 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
                 {
                     if(guess_ch == remainingChArray[i+l] && j == l)
                     {
-                        keep_word == false;
                         keep_word = false;
                         break;
                     }
