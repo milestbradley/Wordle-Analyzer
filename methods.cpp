@@ -15,8 +15,7 @@ struct Guessdata{
 struct {
         bool operator()(const Guessdata& a, const Guessdata& b) const { return a.average < b.average; }
     } customLess;
-
-
+    
 
 bool guessInList(string guess, string arr[], int num_words)
 {
@@ -31,16 +30,12 @@ bool guessInList(string guess, string arr[], int num_words)
     }
     return false;
 }
-
 void compareWords(char guess_arr[], char answer_arr[], int score[])
 {
-
     for(int i = 0; i < 5; i++)
     {
         bool isScored = false;
-
         for(int j = 0; j <5; j++)
-
             if(guess_arr[i] == answer_arr[j])
             {
                 if(i == j)
@@ -63,7 +58,6 @@ void compareWords(char guess_arr[], char answer_arr[], int score[])
         }
     }
 }
-
 void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[], int remaining_count, int& added_counter)
 {
     added_counter = 0;
@@ -111,13 +105,13 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
                 {
                     if(guess_ch == remainingChArray[i+l] && j == l)
                     {
+                        keep_word == false;
                         keep_word = false;
                         break;
                     }
                     else if(guess_ch == remainingChArray[i+l] && j!=l)
                     {
                         found += 1;
-
                     }
                 }
                 keep_word = (found == 1);
@@ -137,19 +131,17 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
             }
         }
     }
-
 }
-
 int numberEliminated(char guess_arr[], char keyword_arr[], int score[], char remainingChArray[], char newChArray[], int remainingCount, int& added_counter)
 {
     compareWords(guess_arr, keyword_arr, score);
     cleanChArray(guess_arr, score, remainingChArray, newChArray, remainingCount, added_counter);
     return(2309 - (added_counter)/5);
 }
-
 int averageEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
 {
     int num_elim = 0;
+    int current_length = added_counter;
     for(int i = 0; i < remainingCount; i += 5)
     {
         char * keyword_array = new char[5];
@@ -174,17 +166,13 @@ void makeGuess(char remainingChArray[], int score[], char newChArray[], int& rem
             guess_dict[i/5].guess[j] = remainingChArray[i+j];
             //printf("%c", guess_dict[i/5].guess[j]);
         }
+        //printf("%i  ", guess_dict[i/5].average);
         guess_dict[i/5].average = averageEliminated(guess_dict[i/5].guess, remainingChArray, score, newChArray, remainingCount, added_counter);
     }
+    printf("\n");
 
     std::sort(&guess_dict[0], &guess_dict[num_words], customLess);
-    for(int i = 0; i < 230; i++)
-    {
-        for(int j = 0; j < 5; j++){
-        }
-
-    }
-
+    
     for(int i = 0; i < 5; i++)
     {
         final_guess[i] = guess_dict[num_words-1].guess[i];
@@ -240,9 +228,9 @@ int main()
 
     char official_answer[] = {'a', 'l', 'o', 'n', 'e'};
 
-    
-    
-    
+
+
+
     //REAL GAME LOGIC
     //FIRST GUESS
     printf("first guess: ");
@@ -251,7 +239,7 @@ int main()
     compareWords(officialGuess, officialAnswer, score_template);
     bool match = true;
     for(int i = 0; i < 5; i++)
-        
+
         if(score_template[i] != 2)
         {
             match = false;
@@ -270,15 +258,15 @@ int main()
         secondList[i] = chArray[i];
     }
     ch_count = addCount;
-    
-    
+
+
     printf("second guess: ");
-    
+
     //SECOND GUESS
     makeGuess(secondList, score_template, chArray, ch_count, addCount, officialGuess, attempts);
     match = true;
     for(int i = 0; i < 5; i++)
-        
+
         if(score_template[i] != 2)
         {
             match = false;
@@ -297,16 +285,16 @@ int main()
         thirdList[i] = chArray[i];
     }
     ch_count = addCount;
-    
-    
-    
-    
+
+
+
+
     //THIRD GUESS
     makeGuess(thirdList, score_template, chArray, ch_count, addCount, officialGuess, attempts);
     compareWords(officialGuess, officialAnswer, score_template);
     match = true;
     for(int i = 0; i < 5; i++)
-        
+
         if(score_template[i] != 2)
         {
             match = false;
@@ -325,16 +313,16 @@ int main()
         fourthList[i] = chArray[i];
     }
     ch_count = addCount;
-    
-    
-    
-    
+
+
+
+
     //FOURTH GUESS
     makeGuess(fourthList, score_template, chArray, ch_count, addCount, officialGuess, attempts);
     compareWords(officialGuess, officialAnswer, score_template);
     match = true;
     for(int i = 0; i < 5; i++)
-        
+
         if(score_template[i] != 2)
         {
             match = false;
@@ -353,16 +341,16 @@ int main()
         fifthList[i] = chArray[i];
     }
     ch_count = addCount;
-    
-    
-    
-    
+
+
+
+
     //FIFTH GUESS
     makeGuess(fifthList, score_template, chArray, ch_count, addCount, officialGuess, attempts);
     compareWords(officialGuess, officialAnswer, score_template);
     match = true;
     for(int i = 0; i < 5; i++)
-        
+
         if(score_template[i] != 2)
         {
             match = false;
@@ -381,16 +369,16 @@ int main()
         sixthList[i] = chArray[i];
     }
     ch_count = addCount;
-    
-    
-    
-    
+
+
+
+
     //SIXTH GUESS
     makeGuess(sixthList, score_template, chArray, ch_count, addCount, officialGuess, attempts);
     compareWords(officialGuess, officialAnswer, score_template);
     match = true;
     for(int i = 0; i < 5; i++)
-        
+
         if(score_template[i] != 2)
         {
             match = false;
@@ -406,7 +394,5 @@ int main()
         printf("FAIL\n");
         return 0;
     }
-    
+
 }
-
-
