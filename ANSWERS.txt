@@ -1,4 +1,4 @@
-cd ~/personalaback
+aback
 abase
 abate
 abbey
