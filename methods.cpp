@@ -162,10 +162,11 @@ void makeGuess(char remainingChArray[], int score[], char newChArray[], int& rem
     printf("coool\n");
     for(int i = 0; i < remainingCount/5; i ++)
     {
+        printf("\n");
         for(int j = 0; j < 5; j++)
         {
             guess_dict[i].guess[j] = remainingChArray[(5*i)+j];
-            printf("%c", guess_dict[i/5].guess[j]);
+            printf("%c", guess_dict[i].guess[j]);
         }
         guess_dict[i].average = averageEliminated(guess_dict[i].guess, remainingChArray, score, newChArray, remainingCount, added_counter);
         printf("%i  ", guess_dict[i].average);
@@ -201,7 +202,7 @@ int main()
 {
     const int num_words = 2309;
     string * ANSWERLIST = new string[num_words];
-    char * chArray = new char[11545];
+    char * chArray = new char[11545*2];
     char * officialGuess = new char[5];
     char * officialAnswer = new char[5];
     int count = 0;
@@ -214,7 +215,6 @@ int main()
     if(!inputFile)
     {
         cout << "Error finding input file" << endl;
-        system("pause");
         exit(-1);
     }
     while(!inputFile.eof())
@@ -257,7 +257,7 @@ int main()
     //FIRST GUESS
     printf("first guess: ");
     Guessdata * guess_dict = new Guessdata[ch_count/5];
-    makeGuess(chAnswerList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict);
+    makeGuess(smallerList, score_template, chArray, smaller_count, addCount, officialGuess, attempts, guess_dict);
     compareWords(officialGuess, officialAnswer, score_template);
     bool match = true;
     for(int i = 0; i < 5; i++)
@@ -274,7 +274,8 @@ int main()
         printf("%i\n", attempts);
         return attempts;
     }
-    cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
+    //USE SMALLER COUNT
+    cleanChArray(officialGuess, score_template, smallerList, chArray, ch_count, addCount);
     if(addCount == 0)
     {
         printf("fail");
@@ -289,7 +290,7 @@ int main()
     printf("\n");
     ch_count = addCount;
     delete[] guess_dict;
-    
+    delete[] chAnswerList;
     printf("second guess: ");
     Guessdata * guess_dict2 = new Guessdata[ch_count/5];
     //SECOND GUESS
@@ -325,7 +326,7 @@ int main()
     }
     ch_count = addCount;
 
-    
+    delete[] secondList;
     delete[] guess_dict2;
     Guessdata * guess_dict3 = new Guessdata[ch_count/5];
     printf("third guess: ");
@@ -361,7 +362,7 @@ int main()
     }
     ch_count = addCount;
 
-
+    delete[] thirdList;
     delete[] guess_dict3;
     Guessdata * guess_dict4 = new Guessdata[ch_count/5];
 
@@ -396,7 +397,7 @@ int main()
     }
     ch_count = addCount;
 
-
+    delete[] fourthList;
     delete[] guess_dict4;
     Guessdata * guess_dict5 = new Guessdata[ch_count/5];
 
@@ -432,7 +433,7 @@ int main()
     }
     ch_count = addCount;
 
-
+    delete[] fifthList;
     delete[] guess_dict5;
     Guessdata * guess_dict6 = new Guessdata[ch_count/5];
 
