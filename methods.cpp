@@ -111,6 +111,7 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
                     else if(guess_ch == remainingChArray[i+l] && j!=l)
                     {
                         found += 1;
+                        break;
                     }
                 }
                 if(found != 1)
@@ -248,22 +249,27 @@ int main()
         }
     }
 
+    officialGuess[0] = 'r';
+    officialGuess[1] = 'a';
+    officialGuess[2] = 'i';
+    officialGuess[3] = 's';
+    officialGuess[4] = 'e';
 
-
-    officialAnswer[0] = 'b';
-    officialAnswer[1] = 'o';
-    officialAnswer[2] = 'u';
-    officialAnswer[3] = 'n';
-    officialAnswer[4] = 'd';
+    officialAnswer[0] = 't';
+    officialAnswer[1] = 'r';
+    officialAnswer[2] = 'a';
+    officialAnswer[3] = 's';
+    officialAnswer[4] = 'h';
 
 
 
     //REAL GAME LOGIC
     //FIRST GUESS
-    printf("first guess: ");
+    printf("first guess: raise");
     Guessdata * guess_dict = new Guessdata[ch_count/5];
-    makeGuess(chAnswerList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict);
+    //makeGuess(chAnswerList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict);
     compareWords(officialGuess, officialAnswer, score_template);
+    attempts++;
     bool match = true;
     for(int i = 0; i < 5; i++)
     {
@@ -283,7 +289,7 @@ int main()
     cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
     if(addCount == 0)
     {
-        printf("fail");
+        printf("fail\n");
         return 0;
     }
     char * secondList = new char[addCount];
@@ -292,7 +298,7 @@ int main()
         secondList[i] = chArray[i];
         //printf("%c", secondList[i]);
     }
-    //printf("\n");
+    printf("\n");
     ch_count = addCount;
     delete[] guess_dict;
     delete[] chAnswerList;
@@ -321,7 +327,7 @@ int main()
     cleanChArray(officialGuess, score_template, secondList, chArray, ch_count, addCount);
     if(addCount == 0)
     {
-        printf("fail");
+        printf("fail\n");
         return 0;
     }
     char * thirdList = new char[addCount];
@@ -357,7 +363,7 @@ int main()
     cleanChArray(officialGuess, score_template, thirdList, chArray, ch_count, addCount);
     if(addCount == 0)
     {
-        printf("fail");
+        printf("fail\n");
         return 0;
     }
     char * fourthList = new char[addCount];
@@ -370,7 +376,7 @@ int main()
     delete[] thirdList;
     delete[] guess_dict3;
     Guessdata * guess_dict4 = new Guessdata[ch_count/5];
-
+    printf("Fourth guess: ");
     //FOURTH GUESS
     makeGuess(fourthList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict4);
     compareWords(officialGuess, officialAnswer, score_template);
@@ -392,7 +398,7 @@ int main()
     cleanChArray(officialGuess, score_template, fourthList, chArray, ch_count, addCount);
     if(addCount == 0)
     {
-        printf("fail");
+        printf("fail\n");
         return 0;
     }
     char * fifthList = new char[addCount];
@@ -405,7 +411,8 @@ int main()
     delete[] fourthList;
     delete[] guess_dict4;
     Guessdata * guess_dict5 = new Guessdata[ch_count/5];
-
+    
+    printf("Fifth guess: ");
     //FIFTH GUESS
     makeGuess(fifthList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict5);
     compareWords(officialGuess, officialAnswer, score_template);
@@ -428,7 +435,7 @@ int main()
     cleanChArray(officialGuess, score_template, fifthList, chArray, ch_count, addCount);
     if(addCount == 0)
     {
-        printf("fail");
+        printf("fail\n");
         return 0;
     }
     char * sixthList = new char[addCount];
@@ -441,7 +448,8 @@ int main()
     delete[] fifthList;
     delete[] guess_dict5;
     Guessdata * guess_dict6 = new Guessdata[ch_count/5];
-
+    
+    printf("Sixth guess: ");
     //SIXTH GUESS
     makeGuess(fifthList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict6);
     compareWords(officialGuess, officialAnswer, score_template);
