@@ -139,7 +139,7 @@ int numberEliminated(char guess_arr[], char keyword_arr[], int score[], char rem
 {
     compareWords(guess_arr, keyword_arr, score);
     cleanChArray(guess_arr, score, remainingChArray, newChArray, remainingCount, added_counter);
-    return(2309 - (added_counter)/5);
+    return((remainingCount/5) - (added_counter)/5);
 }
 int totalEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
 {
@@ -152,7 +152,7 @@ int totalEliminated(char guess_arr[], char remainingChArray[], int score[], char
     for(int i = 0; i < remainingCount; i += 5)
     {
 
-        char * keyword_array = new char[5];
+        char keyword_array[5];
         for(int j = 0; j < 5; j++)
         {
             keyword_array[j] = remainingChArray[i+j];
@@ -189,11 +189,10 @@ void makeGuess(char remainingChArray[], int score[], char newChArray[], int& rem
             printf("\n");
         }
     }*/
-    //printf("yee\n");
-    if(remainingCount>5){
+//    printf("yee\n");
 
-        std::sort(&guess_dict[0], &guess_dict[remainingCount/5], customLess);
-    }
+    std::sort(&guess_dict[0], &guess_dict[remainingCount/5], customLess);
+    
 
     for(int i = 0; i < 5; i++)
     {
@@ -208,12 +207,12 @@ int main()
 {
     const int num_words = 2309;
     string * ANSWERLIST = new string[num_words];
-    char * chArray = new char[11545*2];
-    char * officialGuess = new char[5];
-    char * officialAnswer = new char[5];
+    char * chArray = new char[num_words*5];
+    char officialGuess[5];
+    char officialAnswer[5];
     int count = 0;
     int attempts = 0;
-    int * score_template = new int[5];
+    int score_template[5];
     int numberOfWords;
     int addCount = 0;
     ifstream inputFile;
@@ -229,11 +228,11 @@ int main()
         count++;
     }
     numberOfWords = count;
-    int ch_count = 11545;
-    int smaller_count = 5750;
+    int ch_count = numberOfWords*5;
+//    int smaller_count = 5750;
     char * chAnswerList = new char[ch_count];
-    char * smallerList = new char[smaller_count];
-    for(int i = 0; i < 2309; i++)
+//    char * smallerList = new char[smaller_count];
+    for(int i = 0; i < numberOfWords; i++)
     {
         for(int j = 0; j < 5; j++)
         {
@@ -241,251 +240,106 @@ int main()
         }
     }
 
-    for(int i = 0; i < 1150; i++)
+/*    for(int i = 0; i < 1150; i++)
     {
         for(int j = 0; j < 5; j++)
         {
             smallerList[(i*5)+j] = ANSWERLIST[i][j];
         }
     }
-
+*/
     officialGuess[0] = 'r';
     officialGuess[1] = 'a';
     officialGuess[2] = 'i';
     officialGuess[3] = 's';
     officialGuess[4] = 'e';
 
-    officialAnswer[0] = 't';
-    officialAnswer[1] = 'r';
-    officialAnswer[2] = 'a';
-    officialAnswer[3] = 's';
-    officialAnswer[4] = 'h';
+    officialAnswer[0] = 'j';
+    officialAnswer[1] = 'a';
+    officialAnswer[2] = 'z';
+    officialAnswer[3] = 'z';
+    officialAnswer[4] = 'y';
 
 
 
-    //REAL GAME LOGIC
-    //FIRST GUESS
-    printf("first guess: raise");
-    Guessdata * guess_dict = new Guessdata[ch_count/5];
-    //makeGuess(chAnswerList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict);
-    compareWords(officialGuess, officialAnswer, score_template);
-    attempts++;
-    bool match = true;
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < 6; i++)
     {
-
-        if(score_template[i] != 2)
+        if(i == 0)
         {
-            match = false;
-            break;
+            printf("Guess %i: raise\n", i+1);
+            Guessdata * guess_dict = new Guessdata[ch_count/5];
+            compareWords(officialGuess, officialAnswer, score_template);
+            attempts++;
+            bool match = true;
+            for(int i = 0; i < 5; i++)
+            {
+
+                if(score_template[i] != 2)
+                {
+                    match = false;
+                    break;
+                }
+            }
+            if(match)
+            {
+                printf("Solved in %i attempts!\n", attempts);
+                return attempts;
+            }
+            //USE SMALLER COUNT
+            cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
+            if(addCount == 0)
+            {
+                printf("fail\n");
+                return 0;
+            }
+            //char * newList = new char[addCount];
+            for(int i = 0; i < addCount; i++)
+            {
+                chAnswerList[i] = chArray[i];
+                //printf("%c", secondList[i]);
+            }
+            ch_count = addCount;
+            delete[] guess_dict;
+        }
+        else
+        {
+            printf("Guess %i: ", i+1);
+            Guessdata * guess_dict = new Guessdata[ch_count/5];
+            makeGuess(chAnswerList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict);
+            compareWords(officialGuess, officialAnswer, score_template);
+            bool match = true;
+            for(int i = 0; i < 5; i++)
+            {
+
+                if(score_template[i] != 2)
+                {
+                    match = false;
+                    break;
+                }
+            }
+            if(match)
+            {
+                printf("Solved in %i attempts!\n", attempts);
+                return attempts;
+            }
+            //USE SMALLER COUNT
+            cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
+            if(addCount == 0)
+            {
+                printf("fail\n");
+                return 0;
+            }
+            //char * newList = new char[addCount];
+            for(int i = 0; i < addCount; i++)
+            {
+                chAnswerList[i] = chArray[i];
+                //printf("%c", secondList[i]);
+            }
+            ch_count = addCount;
+            delete[] guess_dict;
+            //delete[] chAnswerList;
         }
     }
-    if(match)
-    {
-        printf("Solved in %i attempts!\n", attempts);
-        return attempts;
-    }
-    //USE SMALLER COUNT
-    cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
-    if(addCount == 0)
-    {
-        printf("fail\n");
-        return 0;
-    }
-    char * secondList = new char[addCount];
-    for(int i = 0; i < addCount; i++)
-    {
-        secondList[i] = chArray[i];
-        //printf("%c", secondList[i]);
-    }
-    printf("\n");
-    ch_count = addCount;
-    delete[] guess_dict;
-    delete[] chAnswerList;
-    printf("second guess: ");
-    Guessdata * guess_dict2 = new Guessdata[ch_count/5];
-    //SECOND GUESS
-    makeGuess(secondList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict2);
-    compareWords(officialGuess, officialAnswer, score_template);
-    match = true;
-    for(int i = 0; i < 5; i++)
-    {
-        //printf("%i", score_template[i]);
-
-        if(score_template[i] != 2)
-        {
-            match = false;
-            break;
-        }
-    }
-    if(match)
-    {
-        printf("Solved in %i attempts!\n", attempts);
-        return attempts;
-    }
-
-    cleanChArray(officialGuess, score_template, secondList, chArray, ch_count, addCount);
-    if(addCount == 0)
-    {
-        printf("fail\n");
-        return 0;
-    }
-    char * thirdList = new char[addCount];
-    for(int i = 0; i < addCount; i++)
-    {
-        thirdList[i] = chArray[i];
-    }
-    ch_count = addCount;
-
-    delete[] secondList;
-    delete[] guess_dict2;
-    Guessdata * guess_dict3 = new Guessdata[ch_count/5];
-    printf("third guess: ");
-    //THIRD GUESS
-    makeGuess(thirdList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict3);
-    compareWords(officialGuess, officialAnswer, score_template);
-    match = true;
-    for(int i = 0; i < 5; i++)
-    {
-        
-        if(score_template[i] != 2)
-        {
-            match = false;
-            break;
-        }
-    }
-    if(match)
-    {
-        printf("Solved in %i attempts!\n", attempts);
-        return attempts;
-    }
-
-    cleanChArray(officialGuess, score_template, thirdList, chArray, ch_count, addCount);
-    if(addCount == 0)
-    {
-        printf("fail\n");
-        return 0;
-    }
-    char * fourthList = new char[addCount];
-    for(int i = 0; i < addCount; i++)
-    {
-        fourthList[i] = chArray[i];
-    }
-    ch_count = addCount;
-
-    delete[] thirdList;
-    delete[] guess_dict3;
-    Guessdata * guess_dict4 = new Guessdata[ch_count/5];
-    printf("Fourth guess: ");
-    //FOURTH GUESS
-    makeGuess(fourthList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict4);
-    compareWords(officialGuess, officialAnswer, score_template);
-    match = true;
-    for(int i = 0; i < 5; i++)
-    {
-        if(score_template[i] != 2)
-        {
-            match = false;
-            break;
-        }
-    }
-    if(match)
-    {
-        printf("Solved in %i attempts!\n", attempts);
-        return attempts;
-    }
-
-    cleanChArray(officialGuess, score_template, fourthList, chArray, ch_count, addCount);
-    if(addCount == 0)
-    {
-        printf("fail\n");
-        return 0;
-    }
-    char * fifthList = new char[addCount];
-    for(int i = 0; i < addCount; i++)
-    {
-        fifthList[i] = chArray[i];
-    }
-    ch_count = addCount;
-
-    delete[] fourthList;
-    delete[] guess_dict4;
-    Guessdata * guess_dict5 = new Guessdata[ch_count/5];
     
-    printf("Fifth guess: ");
-    //FIFTH GUESS
-    makeGuess(fifthList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict5);
-    compareWords(officialGuess, officialAnswer, score_template);
-    match = true;
-    for(int i = 0; i < 5; i++)
-    {
-
-        if(score_template[i] != 2)
-        {
-            match = false;
-            break;
-        }
-    }
-    if(match)
-    {
-        printf("Solved in %i attempts!\n", attempts);
-        return attempts;
-    }
-
-    cleanChArray(officialGuess, score_template, fifthList, chArray, ch_count, addCount);
-    if(addCount == 0)
-    {
-        printf("fail\n");
-        return 0;
-    }
-    char * sixthList = new char[addCount];
-    for(int i = 0; i < addCount; i++)
-    {
-        sixthList[i] = chArray[i];
-    }
-    ch_count = addCount;
-
-    delete[] fifthList;
-    delete[] guess_dict5;
-    Guessdata * guess_dict6 = new Guessdata[ch_count/5];
     
-    printf("Sixth guess: ");
-    //SIXTH GUESS
-    makeGuess(fifthList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict6);
-    compareWords(officialGuess, officialAnswer, score_template);
-    match = true;
-    for(int i = 0; i < 5; i++)
-    {
-        if(score_template[i] != 2)
-        {
-            match = false;
-            break;
-        }
-    }
-    if(match)
-    {
-        printf("Solved in %i attempts!\n", attempts);
-        return attempts;
-    }
-    else
-    {
-        printf("FAIL\n");
-        return 0;
-    }
-    /*for(int i = 0; i < ch_count; i++)
-    {
-        printf("%c", chAnswerList[i]);
-    }
-    char g[5] = {'r', 'a', 'i', 's', 'e'};
-    char poop[5] = {'d', 'o', 'w', 'r', 'y'};
-    compareWords(g, officialAnswer, score_template);
-    for(int i  = 0; i < 5; i++){
-        printf("%i", score_template[i]);
-    }
-    cleanChArray(g, score_template, chAnswerList, chArray, ch_count, addCount);
-    printf("%i", addCount);
-    for(int i = 0; i < addCount; i++)
-    {
-        printf("%c", chArray[i]);
-    }*/
 }
