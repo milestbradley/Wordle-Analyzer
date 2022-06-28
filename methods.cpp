@@ -6,17 +6,22 @@
 
 using namespace std;
 
+//This struct stores the specific guess and its corresponding total number of words eliminated as determined by the totalEliminated function
+
 struct Guessdata{
-        int average;
+        int total;
         char guess[5];
     };
+    
 
 
+
+//This is the comparison used to sort the array of structs by their total eliminated values
 struct {
-        bool operator()(const Guessdata& a, const Guessdata& b) const { return a.average < b.average; }
+        bool operator()(const Guessdata& a, const Guessdata& b) const { return a.total < b.total; }
     } customLess;
 
-
+//This method determines whether a guess is a valid guess in the word list
 bool guessInList(string guess, string arr[], int num_words)
 {
     int i;
@@ -30,6 +35,13 @@ bool guessInList(string guess, string arr[], int num_words)
     }
     return false;
 }
+
+
+/*This method compares two words according to Wordle logic, 
+and returns an integer array of length 5, where a 0 corresponds to a grey letter, 
+ie a letter that is not found in the true answer, a 1 corresponds to a yellow letter, 
+or one that is found but in the wrong location, and a 2 corresponds to a green letter, 
+which signifies the correct location and letter.*/
 void compareWords(char guess_arr[], char answer_arr[], int score[])
 {
     for(int i = 0; i < 5; i++)
@@ -58,6 +70,9 @@ void compareWords(char guess_arr[], char answer_arr[], int score[])
         }
     }
 }
+
+/*This method takes a guess word, and a score, and eliminates all words that are rendered impossible by that guess/score combination. 
+It then updates an integer value which stores the number of words that are still possible answers and are added to the new list of remaining words.*/
 void cleanChArray(char guess_array[], int score[], char remainingChArray[], char newChArray[], int remaining_count, int& added_counter)
 {
     added_counter = 0;
@@ -135,12 +150,17 @@ void cleanChArray(char guess_array[], int score[], char remainingChArray[], char
         }
     }
 }
+//This method uses the previous methods to return the number of words that are eliminated given a certain guess and answer combination
 int numberEliminated(char guess_arr[], char keyword_arr[], int score[], char remainingChArray[], char newChArray[], int remainingCount, int& added_counter)
 {
     compareWords(guess_arr, keyword_arr, score);
     cleanChArray(guess_arr, score, remainingChArray, newChArray, remainingCount, added_counter);
     return((remainingCount/5) - (added_counter)/5);
 }
+
+/*This method iterates through the above numberEliminated method, 
+using the same guess word against every possible answer word, and sums the total number of words eliminated across all iterations. 
+This is used to determine the optimal guess word*/
 int totalEliminated(char guess_arr[], char remainingChArray[], int score[], char newChArray[], int remainingCount, int& added_counter)
 {
     /*for(int i = 0; i < 5; i++)
@@ -162,6 +182,9 @@ int totalEliminated(char guess_arr[], char remainingChArray[], int score[], char
     return num_elim;
 }
 
+
+/*This final method takes an array of structs and populates it with every possible guess word and then its corresponding total eliminated integer. 
+It then sorts based on total eliminated, and the word with the highest total eliminated value will be used in the main function as the official guess*/
 void makeGuess(char remainingChArray[], int score[], char newChArray[], int& remainingCount, int& added_counter, char final_guess[], int& num_attempts, Guessdata guess_dict[])
 {
     //printf("%i, %i, %i\n", remainingCount, added_counter, num_attempts);
@@ -174,7 +197,7 @@ void makeGuess(char remainingChArray[], int score[], char newChArray[], int& rem
             guess_dict[i].guess[j] = remainingChArray[(5*i)+j];
             //printf("%c", guess_dict[i].guess[j]);
         }
-        guess_dict[i].average = totalEliminated(guess_dict[i].guess, remainingChArray, score, newChArray, remainingCount, added_counter);
+        guess_dict[i].total = totalEliminated(guess_dict[i].guess, remainingChArray, score, newChArray, remainingCount, added_counter);
         //printf("%i  ", guess_dict[i].average);
     }
     /*if(num_attempts > 0)
@@ -203,19 +226,38 @@ void makeGuess(char remainingChArray[], int score[], char newChArray[], int& rem
     num_attempts += 1;
 }
 
-int main()
+/*TO  USE THIS PROGRAM:
+This program is run using command line arguments, and the results will be printed in the terminal. 
+To use, first compile, and then run using "./a.out Guess Answer"
+Guess and Answer must be all lowercase 5 letter words, or the program will not work.
+EXAMPLE: 
+./a.out raise chief
+Would print:
+Guess 1: raise
+Guess 2: edict
+Guess 3: chief
+Solved in 3 attempts!
+
+For massive speed improvements, I have allowed the user to choose the first word manually, and then have the bot solve the remainder of the wordle. 
+However, if you would like to use the algorithmically determined optimal guess, use "raise", and it will function as if the program solved from beginning to end.
+
+*/
+int main(int argc, char * argv[])
 {
-    const int num_words = 2309;
-    string * ANSWERLIST = new string[num_words];
-    char * chArray = new char[num_words*5];
+    int numberOfWords = 2309;
+    string * ANSWERLIST = new string[numberOfWords];
+    char * chArray = new char[numberOfWords*5];
     char officialGuess[5];
     char officialAnswer[5];
     int count = 0;
     int attempts = 0;
     int score_template[5];
-    int numberOfWords;
     int addCount = 0;
     ifstream inputFile;
+
+//This populates the main array of strings from the ANSWERS.txt file, which is the list of words released by Wordle as the possible answer words. 
+//For speed purposes, I am only using possible answers as guess words, and not every possible 5 letter word. 
+
     inputFile.open("ANSWERS.txt");
     if(!inputFile)
     {
@@ -248,96 +290,80 @@ int main()
         }
     }
 */
-    officialGuess[0] = 'r';
-    officialGuess[1] = 'a';
-    officialGuess[2] = 'i';
-    officialGuess[3] = 's';
-    officialGuess[4] = 'e';
 
-    officialAnswer[0] = 'j';
-    officialAnswer[1] = 'a';
-    officialAnswer[2] = 'z';
-    officialAnswer[3] = 'z';
-    officialAnswer[4] = 'y';
+    for(int i = 0; i < 5; i++)
+    {
+        officialGuess[i] = argv[1][i];
+    }
+    for(int i = 0; i < 5; i++)
+    {
+        officialAnswer[i] = argv[2][i];
+    }
 
+/* This is the main logic of the program. 
+It iterates through a maximum of 6 guesses, using makeguess to sort the remaining words, 
+and cleanlist to update the list for the next iteration. 
+The program is sometimes unsuccessful with certain patterns of words, 
+such as break, creak, wreak, and freak, not for any algorithmic flaw, 
+but simply because each of these words is equally probable after _reak has been determined. 
+I believe this is unavoidable. For all other words I have tested, it succeeds in determining the correct keyword.
 
+*/
 
     for(int i = 0; i < 6; i++)
     {
+        Guessdata * guess_dict = new Guessdata[ch_count/5];
         if(i == 0)
         {
-            printf("Guess %i: raise\n", i+1);
-            Guessdata * guess_dict = new Guessdata[ch_count/5];
+            printf("Guess %i: ", i+1);
+            for(int j = 0; j < 5; j++)
+            {
+                printf("%c", officialGuess[j]);
+            }
+            printf("\n");
             compareWords(officialGuess, officialAnswer, score_template);
             attempts++;
-            bool match = true;
-            for(int i = 0; i < 5; i++)
-            {
-
-                if(score_template[i] != 2)
-                {
-                    match = false;
-                    break;
-                }
-            }
-            if(match)
-            {
-                printf("Solved in %i attempts!\n", attempts);
-                return attempts;
-            }
-            //USE SMALLER COUNT
-            cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
-            if(addCount == 0)
-            {
-                printf("fail\n");
-                return 0;
-            }
-            //char * newList = new char[addCount];
-            for(int i = 0; i < addCount; i++)
-            {
-                chAnswerList[i] = chArray[i];
-                //printf("%c", secondList[i]);
-            }
-            ch_count = addCount;
-            delete[] guess_dict;
+            
         }
         else
         {
             printf("Guess %i: ", i+1);
-            Guessdata * guess_dict = new Guessdata[ch_count/5];
             makeGuess(chAnswerList, score_template, chArray, ch_count, addCount, officialGuess, attempts, guess_dict);
             compareWords(officialGuess, officialAnswer, score_template);
-            bool match = true;
-            for(int i = 0; i < 5; i++)
+        }
+        bool match = true;
+        for(int i = 0; i < 5; i++)
+        {
+            if(score_template[i] != 2)
             {
-
-                if(score_template[i] != 2)
-                {
-                    match = false;
-                    break;
-                }
+                match = false;
+                break;
             }
-            if(match)
-            {
-                printf("Solved in %i attempts!\n", attempts);
-                return attempts;
-            }
-            //USE SMALLER COUNT
-            cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
-            if(addCount == 0)
-            {
-                printf("fail\n");
-                return 0;
-            }
-            //char * newList = new char[addCount];
-            for(int i = 0; i < addCount; i++)
-            {
-                chAnswerList[i] = chArray[i];
-                //printf("%c", secondList[i]);
-            }
-            ch_count = addCount;
-            delete[] guess_dict;
-            //delete[] chAnswerList;
+        }
+        if(match)
+        {
+            printf("Solved in %i attempts!\n", attempts);
+            return 0;
+        }
+        //USE SMALLER COUNT
+        cleanChArray(officialGuess, score_template, chAnswerList, chArray, ch_count, addCount);
+        if(addCount == 0)
+        {
+            printf("fail\n");
+            return 1;
+        }
+        //char * newList = new char[addCount];
+        for(int i = 0; i < addCount; i++)
+        {
+            chAnswerList[i] = chArray[i];
+            //printf("%c", secondList[i]);
+        }
+        ch_count = addCount;
+        delete[] guess_dict;
+        if(i == 5)
+        {
+            printf("FAIL\n");
+            return 1;
         }
     }
     
