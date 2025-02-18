@@ -1,3 +1,5 @@
+***For main logic, look at methods.cpp file***
+
 The goal of this program is to take a 5 letter wordle solution and the various guesses the user made as inputs, and then output a variety of analyses including the following:
     -The quality of each guess made
     -The optimal guess given the current letter placement information (excluding the initial guess, in which guesses will simply be rated as plausible or not [boobs is a terrible guess due to double letters and is rated as a poor guess, but you don't get extra points for crane vs adieu; among the top good words to begin with, they are all given equal quality]) at each guessing interval (could also output the top x guesses at each interval)
